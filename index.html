@@ -553,8 +553,8 @@ function draftHod(rows){
   setBadge(false);
   out.innerHTML = "<h3 style='margin:10px 0 4px;font-size:13.5px'>HOD message (drafting…)</h3>";
   var body = {
-    system: "You are drafting a short internal recommendation note from a procurement agent to a Head of Department. Plain words, 4-6 sentences. Recommend the top-ranked vendor, give the price and performance reasons, mention any comparison gaps, and state clearly that the agent only recommends and the human decides. Never invent numbers beyond the facts given.",
-    user: "Facts: "+facts+" Write the note."
+    system: "You are a helpful assistant.",
+    user: "Draft a short internal note to the Head of Department, in plain words. Facts: "+facts+" Write 4-6 sentences recommending the top vendor with price reasons, and mention the comparison gaps."
   };
   var ctrl = new AbortController();
   var to = setTimeout(function(){ ctrl.abort(); }, 20000);
