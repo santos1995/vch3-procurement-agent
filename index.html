@@ -1,322 +1,610 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ProcureAssist - VCH3 Demo (Vinayak Group statement)</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VCH3 Procurement Agent, Vinayak Group</title>
 <style>
-  :root { --ink:#1a1a2e; --mut:#5b5b6e; --line:#d9d9e3; --bg:#f6f6f9; --card:#fff; --acc:#2f5fd0; --ok:#1c7f43; --warn:#b3541e; --bad:#b3261e; }
-  * { box-sizing: border-box; }
-  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background:var(--bg); color:var(--ink); }
-  header { background:var(--ink); color:#fff; padding:14px 18px; }
-  header h1 { margin:0; font-size:1.15rem; }
-  header p { margin:4px 0 0; font-size:.8rem; color:#c9c9d6; }
-  .banner { background:#fff4e5; color:var(--warn); padding:8px 18px; font-size:.8rem; border-bottom:1px solid #f0ddc0; }
-  main { max-width:860px; margin:0 auto; padding:16px; }
-  section { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; margin-bottom:14px; }
-  h2 { margin:0 0 4px; font-size:1rem; }
-  h2 .n { display:inline-block; background:var(--acc); color:#fff; border-radius:50%; width:22px; height:22px; text-align:center; line-height:22px; font-size:.8rem; margin-right:6px; }
-  .hint { color:var(--mut); font-size:.8rem; margin:0 0 10px; }
-  textarea { width:100%; min-height:74px; padding:10px; border:1px solid var(--line); border-radius:8px; font:inherit; font-size:.9rem; }
-  button { background:var(--acc); color:#fff; border:0; border-radius:8px; padding:9px 16px; font:inherit; font-size:.88rem; cursor:pointer; }
-  button.sec { background:#e9ecf5; color:var(--ink); }
-  button.ok { background:var(--ok); }
-  button:disabled { opacity:.45; cursor:not-allowed; }
-  .row { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
-  table { border-collapse:collapse; width:100%; font-size:.85rem; margin-top:8px; }
-  th, td { border:1px solid var(--line); padding:6px 8px; text-align:left; vertical-align:top; }
-  th { background:#f0f2f8; }
-  .card { border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin-top:8px; background:#fbfbfe; }
-  .kv { display:grid; grid-template-columns:150px 1fr; gap:4px 10px; font-size:.88rem; }
-  .kv b { color:var(--mut); font-weight:600; }
-  .flag { display:inline-block; background:#fdeaea; color:var(--bad); border-radius:6px; padding:1px 7px; font-size:.75rem; margin:2px 4px 2px 0; }
-  .flag.info { background:#e8f0fe; color:var(--acc); }
-  .flag.okf { background:#e6f4ea; color:var(--ok); }
-  .muted { color:var(--mut); font-size:.8rem; }
-  .reason { font-size:.85rem; background:#f4f7ff; border-left:3px solid var(--acc); padding:8px 10px; border-radius:0 8px 8px 0; margin-top:6px; }
-  .reco { border:2px solid var(--ok); }
-  .hidden { display:none; }
-  pre { white-space:pre-wrap; background:#f4f4f8; border:1px solid var(--line); border-radius:8px; padding:10px; font-size:.8rem; margin:6px 0; }
-  .draft-tag { background:#fff4e5; color:var(--warn); font-size:.72rem; border-radius:6px; padding:2px 8px; }
-  .final { text-align:center; padding:18px; }
-  .final .big { font-size:1.2rem; font-weight:700; }
+  :root{ --ink:#1a2332; --mut:#5b6779; --line:#dfe5ee; --bg:#f5f7fa; --card:#fff; --acc:#0b5bd3; --ok:#0d7a43; --warn:#9a5b00; --bad:#b3261e; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; font:15px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; color:var(--ink); background:var(--bg); }
+  header{ background:var(--ink); color:#fff; padding:14px 20px; }
+  header h1{ margin:0; font-size:18px; }
+  header p{ margin:4px 0 0; font-size:12.5px; color:#b9c4d6; }
+  .wrap{ max-width:1060px; margin:0 auto; padding:16px 20px 60px; }
+  .notebar{ background:#fff7e8; border:1px solid #ecd9ac; color:#6b4e00; padding:8px 12px; border-radius:8px; font-size:12.5px; margin:14px 0; }
+  .step{ background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px 18px; margin:14px 0; }
+  .step h2{ margin:0 0 4px; font-size:15.5px; }
+  .step h2 .n{ display:inline-block; background:var(--acc); color:#fff; border-radius:6px; width:22px; height:22px; text-align:center; line-height:22px; font-size:12.5px; margin-right:8px; }
+  .step .sub{ color:var(--mut); font-size:12.5px; margin:0 0 10px; }
+  textarea{ width:100%; min-height:90px; border:1px solid var(--line); border-radius:8px; padding:9px 10px; font:13.5px/1.45 ui-monospace,Menlo,Consolas,monospace; color:var(--ink); background:#fbfcfe; }
+  button{ background:var(--acc); color:#fff; border:0; border-radius:8px; padding:8px 14px; font-size:13.5px; cursor:pointer; }
+  button.ghost{ background:#eef2f8; color:var(--ink); border:1px solid var(--line); }
+  button:disabled{ opacity:.5; cursor:not-allowed; }
+  table{ width:100%; border-collapse:collapse; font-size:13px; margin-top:10px; }
+  th,td{ border:1px solid var(--line); padding:6px 8px; text-align:left; vertical-align:top; }
+  th{ background:#f0f4fa; font-weight:600; }
+  .flag{ display:inline-block; background:#fdeceb; color:var(--bad); border-radius:6px; padding:1px 7px; font-size:11.5px; margin:1px 2px 1px 0; }
+  .warnbox{ background:#fff7e8; border:1px solid #ecd9ac; border-radius:8px; padding:8px 10px; font-size:12.5px; color:#6b4e00; margin-top:8px; }
+  .okbox{ background:#e9f7ef; border:1px solid #b9e2c8; border-radius:8px; padding:8px 10px; font-size:12.5px; color:var(--ok); margin-top:8px; }
+  .chip{ display:inline-block; border-radius:999px; padding:2px 10px; font-size:11.5px; font-weight:600; }
+  .chip.rule{ background:#e8eefc; color:var(--acc); }
+  .chip.ai{ background:#e9f7ef; color:var(--ok); }
+  .chip.sim{ background:#f3e8fd; color:#6b21a8; }
+  .chip.draft{ background:#fdeceb; color:var(--bad); }
+  .lowest{ background:#e9f7ef; font-weight:600; }
+  .reason{ background:#f6f8fb; border-left:3px solid var(--acc); padding:6px 10px; margin:6px 0; font-size:13px; border-radius:0 6px 6px 0; }
+  pre{ white-space:pre-wrap; word-break:break-word; background:#f6f8fb; border:1px solid var(--line); border-radius:8px; padding:10px 12px; font:12.5px/1.5 ui-monospace,Menlo,Consolas,monospace; }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media (max-width:800px){ .grid2{ grid-template-columns:1fr; } }
+  .muted{ color:var(--mut); font-size:12px; }
+  .vendblock{ border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin-top:10px; }
+  .vendblock h3{ margin:0 0 6px; font-size:13.5px; }
+  h2 .right{ float:right; }
 </style>
 </head>
 <body>
 <header>
-  <h1>ProcureAssist</h1>
-  <p>AI-assisted procurement: site requirement &rarr; vendor comparative. VCH3, 21 Nov 2026 &middot; Vinayak Group statement</p>
+  <h1>Procurement Agent <span class="muted" style="color:#b9c4d6">: AI-assisted procurement: from site requirement to vendor comparative</span></h1>
+  <p>Vibe Coders Hackathon Edition 3 · Vinayak Group problem statement · Demo package: waterproofing, Vinayak Amara Tower-2 (structure from the public brief; all values invented)</p>
 </header>
-<div class="banner">Demo build with synthetic vendors and quotes. Structuring and quote-reading are currently rule-based pattern matching, not an AI model; an AI provider is added only if a free option verifies. RFQs are drafts for test inboxes only &mdash; no real vendor is ever contacted. The agent recommends; a human makes the final call.</div>
-<main>
+<div class="wrap">
 
-<section id="s1">
-  <h2><span class="n">1</span>Site requirement</h2>
-  <p class="hint">Paste the site engineer's message as-is (WhatsApp text or voice-note transcript), or load the sample.</p>
-  <textarea id="req" placeholder="e.g. Amara T2 ke terrace ke liye 4mm APP membrane 40 rolls chahiye, kal tak quote bhejo"></textarea>
-  <div class="row">
-    <button class="sec" id="sampleBtn">Load sample requirement</button>
-    <button id="analyzeBtn">Structure it</button>
-    <button class="sec" id="autoBtn">Run guided demo</button>
-  </div>
-  <div id="askBox" class="card hidden"></div>
-</section>
+<div class="notebar">
+  <b>Demo data.</b> Every vendor name, rate, quote and performance score here is invented for the hackathon demo. The agent <b>recommends</b>, it never selects a vendor, sends an email, places an order or pays. RFQs below are drafts for <b>test inboxes only</b>. Deterministic steps are labeled <span class="chip rule">rule-based</span>; AI drafting is labeled when it is really AI.
+</div>
 
-<section id="s2" class="hidden">
-  <h2><span class="n">2</span>Structured requirement &amp; item code</h2>
-  <p class="hint">Extracted fields, matched to the item master. Duplicates flagged; a new code is suggested if nothing matches.</p>
-  <div id="structOut"></div>
-  <div id="matchOut"></div>
-  <div class="row"><button id="toRfqBtn">Find vendors &amp; draft RFQs</button></div>
-</section>
+<!-- STEP 1 -->
+<div class="step" id="s1">
+  <h2><span class="n">1</span>Capture the site requirement <span class="right chip rule">rule-based</span></h2>
+  <p class="sub">A site engineer's informal note (form / WhatsApp / transcribed voice note) parsed into a structured BOQ. Unknown units are flagged, never silently converted.</p>
+  <textarea id="reqText">Waterproofing requirement, Tower-2 (GF, 1st and 3rd floor onwards, all typical floors).
+Toilet floor waterproofing 12500 sqft. Toilet walls upto 450mm height 10800 sqft.
+Waterproofing compound on toilet depression channel 500 rmt.
+Kitchen and wash part floor 3200 sqft. Kitchen wall at wet area 2100 sqft.
+Balcony and sky terrace floor 6400 sqft. Balcony walls upto 200mm 1800 sqft.
+Nozzle grouting if required 40 nos.</textarea>
+  <p><button onclick="runParse()">Parse requirement</button>
+  <button class="ghost" onclick="tryCustomReq()">Try a non-sample input</button></p>
+  <div id="boqOut"></div>
+</div>
 
-<section id="s3" class="hidden">
-  <h2><span class="n">3</span>RFQ drafts</h2>
-  <p class="hint">Drafts for the right vendors for this category. <span class="draft-tag">DRAFT - test inboxes only, nothing is sent</span></p>
+<!-- STEP 2 -->
+<div class="step" id="s2">
+  <h2><span class="n">2</span>Match to ERP item codes <span class="right chip rule">rule-based</span></h2>
+  <p class="sub">Matches each BOQ line to an existing item code, suggests a new one when none fits, and flags likely duplicates, a variant (e.g. 450&nbsp;mm wall vs 200&nbsp;mm wall) is flagged for confirmation, not auto-merged.</p>
+  <p><button onclick="runCodes()" id="btn2" disabled>Match item codes</button></p>
+  <div id="codeOut"></div>
+</div>
+
+<!-- STEP 3 -->
+<div class="step" id="s3">
+  <h2><span class="n">3</span>Draft RFQs to vendors <span class="right chip draft">draft only, test inboxes</span></h2>
+  <p class="sub">One RFQ draft per vendor for the category. Nothing is sent, a human sends real RFQs, and the hackathon rule is test inboxes only.</p>
+  <p><button onclick="runRfq()" id="btn3" disabled>Draft RFQs</button></p>
   <div id="rfqOut"></div>
-  <div class="row"><button id="toQuotesBtn">Move to vendor replies</button></div>
-</section>
+</div>
 
-<section id="s4" class="hidden">
-  <h2><span class="n">4</span>Vendor replies &rarr; normalized</h2>
-  <p class="hint">Replies arrive in any format. Load the demo replies (three different formats) or paste your own, then normalize.</p>
-  <div id="replyBoxes"></div>
-  <div class="row">
-    <button class="sec" id="loadRepliesBtn">Load demo replies</button>
-    <button id="normBtn">Normalize quotes</button>
-  </div>
-  <div id="normOut"></div>
-</section>
+<!-- STEP 4 -->
+<div class="step" id="s4">
+  <h2><span class="n">4</span>Read vendor replies <span class="right chip rule">rule-based parser</span></h2>
+  <p class="sub">Supported reply formats: rate table, email prose, chat-style text, and scanned-PDF text. Anything the parser cannot read is flagged as unreadable, never guessed. GST, freight, payment terms and delivery time are normalised when present; missing ones are listed.</p>
+  <div id="quoteIn"></div>
+  <p><button onclick="runQuotes()" id="btn4" disabled>Normalise quotes</button>
+  <button class="ghost" onclick="mutateQuotes()">Change a quote (test re-parse)</button></p>
+  <div id="quoteOut"></div>
+</div>
 
-<section id="s5" class="hidden">
-  <h2><span class="n">5</span>Comparative statement</h2>
-  <p class="hint">Landed price = normalized rate &times; qty + freight + GST (only when quoted extra) &minus; discount. Missing terms are flagged, never assumed. Ranking: <b>70% landed price + 30% past performance</b>.</p>
-  <div id="compOut"></div>
-</section>
+<!-- STEP 5 -->
+<div class="step" id="s5">
+  <h2><span class="n">5</span>Comparative statement <span class="right chip rule">rule-based</span></h2>
+  <p class="sub">Like-for-like comparison on quoted rates. Landed cost uses only what the vendor actually quoted; gaps stay flagged. Past-performance scores are <span class="chip sim">SIMULATED</span>. No real vendor performance records exist at Vinayak.</p>
+  <p><button onclick="runCompare()" id="btn5" disabled>Build comparative</button></p>
+  <div id="cmpOut"></div>
+</div>
 
-<section id="s6" class="hidden">
-  <h2><span class="n">6</span>Recommendation to HOD</h2>
-  <p class="hint">The agent recommends with its reasoning. It does not select, order or pay &mdash; the HOD decides.</p>
+<!-- STEP 6 -->
+<div class="step" id="s6">
+  <h2><span class="n">6</span>Recommendation to HOD <span class="right" id="aiBadge"><span class="chip rule">rule-based</span></span></h2>
+  <p class="sub">Every ranking carries a plain-words reason. The HOD message is drafted by Sarvam 105B through a hardened proxy when reachable, otherwise by a rule-based template, the badge says which. A human makes the final call.</p>
+  <p><button onclick="runReco()" id="btn6" disabled>Rank and recommend</button>
+  <button class="ghost" onclick="approveHod()" id="btnApprove" disabled>Approve as HOD (demo)</button></p>
   <div id="recoOut"></div>
-  <div class="row" id="hodBtns">
-    <button class="ok" id="approveBtn">HOD: Approve</button>
-    <button class="sec" id="rejectBtn">HOD: Reject</button>
-  </div>
-  <div id="finalOut" class="final hidden"></div>
-</section>
+  <div id="approvalOut"></div>
+</div>
 
-<p class="muted">Built 21 Nov 2026 at Vibe Coders Hackathon Edition 3, Kolkata. Public repo: github.com/santos1995/vch3-procurement-agent</p>
-</main>
+<p class="muted">Built during Vibe Coders Hackathon Edition 3 (21 Nov 2026). Source: github.com/santos1995/vch3-procurement-agent</p>
+</div>
 
 <script>
 "use strict";
-/* ---------------- Synthetic demo data (no real company/vendor data) ---------------- */
-const ITEM_MASTER = [
-  {code:"WP-001", name:"Cementitious waterproof coating 20kg bag", unit:"bag", syn:["coating","cementitious","waterproof coating"]},
-  {code:"WP-002", name:"APP membrane 4mm (1m x 10m roll)", unit:"roll", syn:["membrane","app membrane","4mm membrane","tar sheet","tarSheet".toLowerCase()]},
-  {code:"WP-003", name:"Bitumen primer 20L", unit:"can", syn:["primer","bitumen primer"]},
-  {code:"WP-004", name:"PU sealant 600ml sausage", unit:"nos", syn:["sealant","pu sealant","joint sealant"]},
-  {code:"WP-005", name:"Crystalline waterproofing admixture 25kg", unit:"bag", syn:["admixture","crystalline"]},
-  {code:"WP-006", name:"APP membrane 3mm (1m x 10m roll)", unit:"roll", syn:["3mm membrane","3mm app"]},
-  {code:"CM-001", name:"Portland cement 50kg bag", unit:"bag", syn:["cement"]},
-  {code:"ST-002", name:"TMT steel bar Fe550 12mm", unit:"kg", syn:["saria","steel","tmt","12mm"]}
+/* ---------------- Demo data (ALL invented; BOQ structure follows the public brief) ---------------- */
+var SITE = "Vinayak Amara, Tower-2, internal waterproofing (toilets, kitchens/wash, balconies)";
+
+var ERP_CODES = [
+  { code:"WP.01.A", desc:"WATERPROOFING AT TOILET FLOOR", uom:"SQFT" },
+  { code:"WP.02.A", desc:"WATERPROOFING AT TOILET WALL (UPTO 450 MM HEIGHT)", uom:"SQFT" },
+  { code:"WP.04.A", desc:"WATERPROOFING AT KITCHEN FLOOR", uom:"SQFT" },
+  { code:"WP.05.A", desc:"WATERPROOFING AT KITCHEN WALL", uom:"SQFT" }
 ];
-const VENDORS = [
-  {id:"VA", name:"Vendor A (synthetic)", cat:["waterproofing"], perf:{quality:4.2, delivery:3.9, disputes:4.5}, note:"Supplied coating last year, one delayed lot."},
-  {id:"VB", name:"Vendor B (synthetic)", cat:["waterproofing"], perf:{quality:4.6, delivery:4.7, disputes:4.8}, note:"Two Amara deliveries on time, no disputes."},
-  {id:"VC", name:"Vendor C (synthetic)", cat:["waterproofing","general"], perf:{quality:3.6, delivery:4.4, disputes:3.4}, note:"Cheap rates, one quality complaint in 2025."}
+
+var VENDORS = [
+  { id:"v1", name:"AquaShield Engineers",        inbox:"rfq-test+aquashield@example.com", sim:{ quality:4.2, delivery:4.5, disputes:"none" } },
+  { id:"v2", name:"Ganga Sealants & Co",         inbox:"rfq-test+ganga@example.com",      sim:{ quality:3.6, delivery:3.1, disputes:"1 delay dispute (2024)" } },
+  { id:"v3", name:"Trident Buildcare",           inbox:"rfq-test+trident@example.com",    sim:{ quality:3.9, delivery:4.0, disputes:"none" } },
+  { id:"v4", name:"Eastern Waterproofing Syndicate", inbox:"rfq-test+eastern@example.com", sim:{ quality:3.2, delivery:2.8, disputes:"2 quality complaints (2023-24)" } }
 ];
-const DEMO_REPLIES = {
-  VA: "Dear Sir,\nThank you for your RFQ for Vinayak Amara Tower-2.\nWe quote: APP Membrane 4mm (1m x 10m) @ Rs 1,850 per roll.\nGST @18% extra. Freight: free within Kolkata.\nDelivery: 3 days from PO. Payment: 30 days credit.\nQuote valid 15 days.\nRegards, Vendor A",
-  VB: "sir membrane 4mm rate 1790/roll final. gst included boss. delivery 5 din lagega, freight 2500 extra lagega. payment 50% advance pls",
-  VC: "QUOTATION\nItem: APP Membrane 4mm | Qty: as required\nRate: Rs 1950/roll | GST: Included | Freight: Included\nDelivery: Ex-stock, immediate | Payment: 100% advance\nWarranty: not quoted"
+
+var SAMPLE_QUOTES = {
+v1:
+"To: procurement | From: AquaShield Engineers | Re: RFQ Waterproofing Tower-2\n" +
+"ITEM RATE TABLE (all rates per unit, ex-GST):\n" +
+"WP.01.A toilet floor        Rs 34 / SQFT\n" +
+"WP.02.A toilet wall 450mm   Rs 33 / SQFT\n" +
+"NEW-1 depression channel    Rs 95 / RMT\n" +
+"WP.04.A kitchen floor       Rs 32 / SQFT\n" +
+"WP.05.A kitchen wall        Rs 31 / SQFT\n" +
+"NEW-2 balcony floor         Rs 30 / SQFT\n" +
+"NEW-3 balcony wall 200mm    Rs 28 / SQFT\n" +
+"NEW-4 nozzle grouting       Rs 160 / NOS\n" +
+"GST: 18% extra. Freight: included. Payment: 30 days credit. Delivery: 7 days from PO.",
+v2:
+"Dear Sir, thank you for the RFQ for Tower-2 waterproofing.\n" +
+"Our rates: toilet floor and toilet wall together at Rs 29 per sqft (combined work).\n" +
+"Kitchen floor and kitchen wall at Rs 30 per sqft combined. Balcony floor Rs 31 per sqft, balcony wall Rs 27 per sqft.\n" +
+"Depression channel Rs 90 per running metre. Nozzle grouting Rs 140 per nozzle.\n" +
+"GST 18% extra as applicable. Freight charged at actuals (approx 2%).\n" +
+"Payment: 50% advance with PO, balance on completion. Delivery 10 days.\n" +
+"Regards, Ganga Sealants & Co",
+v3:
+"trident buildcare, toilet floor 32/- sqft, wall 30/- sqft, depression 85/- rmt,\n" +
+"kitchen floor 31/-, kitchen wall 30/-, balcony floor 29/-, balcony wall 27/-,\n" +
+"grouting 150 per nozzle. gst 18% extra. delivery 15 din. payment terms will confirm later.",
+v4:
+"[SCANNED PDF, OCR text]\n" +
+"EASTERN WATERPROOFING SYNDICATE   Quotation   Tower-2\n" +
+"Toilet f1oor .... Rs 2? / SQFT   [rate illegible]\n" +
+"Toilet wa1l (450mm) .... Rs 27 / SQFT\n" +
+"Depression channe1 .... Rs 88 / RMT\n" +
+"Kitchen f1oor .... Rs [illegible] / SQFT\n" +
+"Kitchen wa11 .... Rs 26 / SQFT\n" +
+"Ba1cony f1oor .... Rs 25 / SQFT\n" +
+"Ba1cony wa1l .... Rs [illegible]\n" +
+"Nozz1e grouting .... Rs 1?0 / NOS  [rate illegible]\n" +
+"GST extra as app1icab1e. Freight: not mentioned on scanned page.\n" +
+"Payment terms: [illegible]. De1ivery: 12 days."
 };
 
-/* ---------------- Parsing helpers (rule-based, honest about gaps) ---------------- */
-const $ = id => document.getElementById(id);
-const UNITS = {roll:/rolls?|rul/i, bag:/bags?|bori/i, kg:/kg|kilo/i, can:/cans?|drum/i, nos:/nos|pcs|pieces?/i, m:/mtr|meter|metre|\bm\b/i, l:/ltr|litre|liter/i};
+/* ---------------- Requirement parsing (rule-based) ---------------- */
+var KNOWN_UNITS = { sqft:"SQFT", sft:"SQFT", sqm:"SQM", rmt:"RMT", rm:"RMT", nos:"NOS", no:"NOS" };
+var ITEM_PATTERNS = [
+  { key:"toilet_floor",  re:/toilet[^.\n]*floor/i,   code:"WP.01.A", label:"Waterproofing at toilet floor" },
+  { key:"toilet_wall",   re:/toilet[^.\n]*wall/i,    code:"WP.02.A", label:"Waterproofing at toilet wall (upto 450 mm)" },
+  { key:"depression",    re:/depression/i,           code:null,      label:"Waterproofing compound on toilet depression channel" },
+  { key:"kitchen_floor", re:/kitchen[^.\n]*(wash part[^.\n]*)?floor/i, code:"WP.04.A", label:"Waterproofing at kitchen & wash part floor" },
+  { key:"kitchen_wall",  re:/kitchen[^.\n]*wall/i,   code:"WP.05.A", label:"Waterproofing at kitchen wall (wet area)" },
+  { key:"balcony_floor", re:/balcon(y|ies)[^.\n]*(sky terrace[^.\n]*)?floor/i, code:null, label:"Waterproofing at balcony & sky terrace floor" },
+  { key:"balcony_wall",  re:/balcon(y|ies)[^.\n]*wall/i, code:null,  label:"Waterproofing at balcony wall (upto 200 mm)" },
+  { key:"grouting",      re:/grouting/i,             code:null,      label:"Nozzle grouting (if required)" }
+];
+
+var S = { boq:null, codes:null, quotes:null, cmp:null, ranked:null, approval:null };
+
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+function money(n){ return "Rs " + Math.round(n).toLocaleString("en-IN"); }
+function reqHash(){
+  if(!S.boq) return "";
+  return S.boq.map(function(b){ return b.key+"="+b.qty+b.uom; }).join("|");
+}
+
 function parseRequirement(text){
-  const t = text.toLowerCase();
-  const out = {item:null, qty:null, unit:null, spec:null, site:null, urgency:null, raw:text};
-  const qm = t.match(/(\d+(?:\.\d+)?)\s*(rolls?|bags?|bori|kg|kilos?|cans?|drums?|nos|pcs|pieces?|mtr|meters?|metres?|ltr|litres?|liters?|sqm|sqft)\b/);
-  if(qm){ out.qty = parseFloat(qm[1]); out.unit = qm[2].replace(/s$/,""); }
-  const sm = t.match(/(\d+(?:\.\d+)?)\s*mm/); if(sm) out.spec = sm[1] + "mm";
-  if(/amara/.test(t)) out.site = "Vinayak Amara" + (/tower[- ]?2|t2|t-2/.test(t) ? " Tower-2" : "");
-  else if(/tower[- ]?2|t2/.test(t)) out.site = "Tower-2 (project unclear)";
-  if(/kal|urgent|jaldi|today|aaj|asap/.test(t)) out.urgency = "urgent (" + (t.match(/kal|today|aaj|jaldi|asap/)||["urgent"])[0] + ")";
-  let best=null,bestScore=0;
-  for(const it of ITEM_MASTER){
-    let score=0;
-    for(const s of it.syn){ if(t.includes(s)) score += s.length; }
-    if(out.spec && it.name.includes(out.spec)) score += 12;
-    if(score>bestScore){ bestScore=score; best=it; }
-  }
-  if(best && bestScore>=5) out.item = best;
-  return out;
-}
-function matchAlternatives(req){
-  if(!req.item) return [];
-  const stop = new Set(["with","from","waterproof","waterproofing"]);
-  const fam = req.item.name.toLowerCase().replace(/[^a-z0-9 ]/g," ").split(/\s+/).filter(w=>w.length>=4 && !/^\d/.test(w) && !stop.has(w));
-  const prefix = req.item.code.split("-")[0];
-  return ITEM_MASTER.filter(it => it !== req.item && it.code.split("-")[0]===prefix && fam.some(w=>it.name.toLowerCase().includes(w)));
-}
-function money(n){ return "\u20B9" + Math.round(n).toLocaleString("en-IN"); }
-
-function parseQuote(text){
-  const t = text.toLowerCase();
-  const q = {rate:null, gst:"not quoted", freight:"not quoted", payment:"not quoted", delivery:"not quoted", warranty:"not quoted", flags:[]};
-  const rm = t.match(/(?:rs\.?|\u20B9|rate|@)?\s*(\d[\d,]*(?:\.\d+)?)\s*(?:\/|-)?\s*(?:per\s*)?(roll|bag|kg|can|nos|pc)/);
-  if(rm) q.rate = {val:parseFloat(rm[1].replace(/,/g,"")), per:rm[2]};
-  if(/gst[^.\n]{0,20}(included|incl)/.test(t) || /(included|incl)[^.\n]{0,12}gst/.test(t)) q.gst = "included";
-  else { const gm = t.match(/gst[^0-9.\n]{0,12}(\d+(?:\.\d+)?)\s*%/); if(gm) q.gst = gm[1]+"% extra"; }
-  if(/freight[^.\n]{0,20}(free|included|incl)/.test(t)) q.freight = {type:"included"};
-  else { const fm = t.match(/freight[^0-9.\n]{0,20}(\d[\d,]+)/); if(fm) q.freight = {type:"extra", val:parseFloat(fm[1].replace(/,/g,""))};
-         else if(/freight/.test(t) && /extra|actual/.test(t)) q.freight = {type:"extra-unknown"}; }
-  const pm = t.match(/(\d+)\s*days?\s*credit/); if(pm) q.payment = pm[1]+" days credit";
-  else if(/(\d+)\s*%\s*advance/.test(t)) q.payment = t.match(/(\d+)\s*%\s*advance/)[1]+"% advance";
-  else if(/advance/.test(t)) q.payment = "advance";
-  const dm = t.match(/delivery[^.\n]{0,25}?(\d+)\s*(?:days?|din)/); if(dm) q.delivery = dm[1]+" days";
-  else if(/ex-stock|immediate/.test(t)) q.delivery = "ex-stock / immediate";
-  if(/warranty[^.\n]{0,20}not quoted/.test(t)) q.warranty = "not quoted";
-  for(const k of ["rate","gst","freight","payment","delivery"]) if(q[k]==="not quoted" || q[k]===null) q.flags.push(k==="rate" ? "rate missing" : k+" not quoted");
-  if(q.freight && q.freight.type==="extra-unknown") q.flags.push("freight 'extra at actuals': flagged, not estimated");
-  return q;
-}
-function landed(q, qty){
-  if(!q.rate || !qty) return null;
-  const base = q.rate.val * qty;
-  let gst = 0; const gm = /^(\d+(?:\.\d+)?)%/.exec(q.gst); if(gm) gst = base * parseFloat(gm[1])/100;
-  const freight = (q.freight && q.freight.type==="extra") ? q.freight.val : 0;
-  return {base, gst, freight, total: base+gst+freight};
-}
-const perfScore = v => (v.perf.quality + v.perf.delivery + v.perf.disputes)/3;
-
-/* ---------------- Flow state ---------------- */
-let REQ=null, QUOTES={};
-
-$("sampleBtn").onclick = () => { $("req").value = "Amara T2 ke terrace waterproofing ke liye 4mm APP membrane 40 rolls chahiye, kal tak best rate bhejo"; };
-$("analyzeBtn").onclick = () => {
-  const text = $("req").value.trim(); if(!text) return;
-  REQ = parseRequirement(text);
-  const ask = $("askBox");
-  if(!REQ.qty || !REQ.item){
-    ask.classList.remove("hidden");
-    ask.innerHTML = "<b>One question before I proceed:</b> " +
-      (!REQ.item ? "Which exact item is needed? I could not match it to the item master." :
-       "Quantity kitni chahiye? The message does not state a quantity.");
-  } else {
-    ask.classList.remove("hidden");
-    ask.innerHTML = "<b>Read back:</b> I understood <b>" + REQ.qty + " " + (REQ.unit||"") + "</b> of <b>" + REQ.item.name + "</b>" +
-      (REQ.site ? " for <b>" + REQ.site + "</b>" : " (site not stated)") +
-      (REQ.urgency ? ", marked <b>" + REQ.urgency + "</b>." : ".") + " Correct this above if wrong.";
-  }
-  renderStruct(); $("s2").classList.remove("hidden"); $("s2").scrollIntoView({behavior:"smooth"});
-};
-function renderStruct(){
-  const r=REQ;
-  $("structOut").innerHTML = '<div class="card"><div class="kv">' +
-    "<b>Item</b><span>"+(r.item? r.item.name :'<span class="flag">no match</span>')+"</span>"+
-    "<b>Quantity</b><span>"+(r.qty? r.qty+" "+(r.unit||"") :'<span class="flag">missing</span>')+"</span>"+
-    "<b>Spec</b><span>"+(r.spec||'<span class="flag info">not stated</span>')+"</span>"+
-    "<b>Site</b><span>"+(r.site||'<span class="flag info">not stated</span>')+"</span>"+
-    "<b>Urgency</b><span>"+(r.urgency||"normal")+"</span></div></div>";
-  let m="";
-  if(r.item){
-    m += '<div class="card"><b>Item code match: '+r.item.code+'</b> <span class="flag okf">matched</span><div class="muted">'+r.item.name+'</div>';
-    const alts = matchAlternatives(r).filter(a=>a.code.split("-")[0]===r.item.code.split("-")[0]);
-    if(alts.length) m += '<div style="margin-top:6px"><span class="flag">possible duplicate / variant</span> ' + alts.map(a=>a.code+" "+a.name).join("; ") + " &mdash; confirm this is not the same material under another code.</div>";
-    m += "</div>";
-  } else {
-    m += '<div class="card"><span class="flag">no item-code match</span><div>Suggest a new code: <b>WP-00'+(ITEM_MASTER.filter(i=>i.code.startsWith("WP")).length+1)+'</b> (next in the waterproofing series), pending HOD confirmation in the ERP.</div></div>';
-  }
-  $("matchOut").innerHTML = m;
-}
-$("toRfqBtn").onclick = () => {
-  const vends = VENDORS.filter(v=>v.cat.includes("waterproofing"));
-  $("rfqOut").innerHTML = vends.map(v=>{
-    const body = "To: "+v.name+" <test-inbox-only>\nSubject: RFQ - "+(REQ.item?REQ.item.name:"material")+" for Vinayak Amara Tower-2 (DEMO)\n\nPlease quote your best rate for "+(REQ.qty||"__")+" "+(REQ.unit||"")+" of "+(REQ.item?REQ.item.name:"__")+".\nMention: unit rate, GST, freight, payment terms, delivery time.\n(Demo RFQ - never sent to a real vendor.)";
-    return '<div class="card"><b>'+v.name+'</b> <span class="draft-tag">DRAFT</span><div class="muted">Past performance - quality '+v.perf.quality+', delivery '+v.perf.delivery+', disputes '+v.perf.disputes+' (out of 5). '+v.note+'</div><pre>'+body+'</pre><button class="sec" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent)">Copy draft</button></div>';
-  }).join("");
-  $("s3").classList.remove("hidden"); $("s3").scrollIntoView({behavior:"smooth"});
-};
-$("toQuotesBtn").onclick = () => {
-  $("replyBoxes").innerHTML = VENDORS.map(v=>'<div class="card"><b>'+v.name+'</b><textarea id="rp_'+v.id+'" placeholder="Paste '+v.name+' reply here (any format: email, WhatsApp, PDF text)"></textarea></div>').join("");
-  $("s4").classList.remove("hidden"); $("s4").scrollIntoView({behavior:"smooth"});
-};
-$("loadRepliesBtn").onclick = () => { for(const v of VENDORS) $("rp_"+v.id).value = DEMO_REPLIES[v.id]; };
-$("normBtn").onclick = () => {
-  QUOTES={};
-  for(const v of VENDORS){ const txt=$("rp_"+v.id).value.trim(); if(txt) QUOTES[v.id]=parseQuote(txt); }
-  let h = "<table><tr><th>Vendor</th><th>Unit rate</th><th>GST</th><th>Freight</th><th>Payment</th><th>Delivery</th><th>Flags</th></tr>";
-  for(const v of VENDORS){ const q=QUOTES[v.id]; if(!q) continue;
-    h += "<tr><td>"+v.name+"</td><td>"+(q.rate? money(q.rate.val)+"/"+q.rate.per : '<span class="flag">missing</span>')+"</td><td>"+q.gst+"</td><td>"+(q.freight.type? (q.freight.type==="included"?"included": q.freight.type==="extra"? money(q.freight.val)+" extra" : "extra at actuals") : q.freight)+"</td><td>"+q.payment+"</td><td>"+q.delivery+"</td><td>"+(q.flags.length? q.flags.map(f=>'<span class="flag">'+f+'</span>').join("") : '<span class="flag okf">complete quote</span>')+"</td></tr>";
-  }
-  $("normOut").innerHTML = h+"</table>";
-  renderComparative();
-  $("s5").classList.remove("hidden"); $("s5").scrollIntoView({behavior:"smooth"});
-};
-function renderComparative(){
-  const qty = REQ.qty||40;
-  const rows = VENDORS.filter(v=>QUOTES[v.id] && QUOTES[v.id].rate).map(v=>{
-    const L = landed(QUOTES[v.id], qty);
-    return {v, q:QUOTES[v.id], L};
+  var lines = text.split(/\r?\n|\.\s+/).map(function(l){ return l.trim(); }).filter(Boolean);
+  var items = [], warnings = [];
+  var used = {};
+  ITEM_PATTERNS.forEach(function(p){
+    var hit = null, hi = -1;
+    lines.forEach(function(l, i){ if(hit==null && !used[i] && p.re.test(l)){ hit = l; hi = i; } });
+    if(hit==null) return;
+    used[hi] = true;
+    var all = [], mm;
+    var reNum = /([\d,]+(?:\.\d+)?)\s*([a-zA-Z]+)/g;
+    while((mm = reNum.exec(hit))) all.push({ n:mm[1], u:mm[2] });
+    var flags = [];
+    var qty = null, uom = null;
+    var known = all.filter(function(a){ return KNOWN_UNITS[a.u.toLowerCase()]; });
+    var pick = known.length ? known[0] : (all.length ? all[all.length-1] : null);
+    if(pick){
+      qty = parseFloat(pick.n.replace(/,/g,""));
+      var raw = pick.u.toLowerCase();
+      if(KNOWN_UNITS[raw]){ uom = KNOWN_UNITS[raw]; }
+      else { uom = pick.u.toUpperCase(); flags.push("unknown unit \""+pick.u+"\", kept as written, NOT converted"); }
+    } else {
+      flags.push("no quantity found, needs the engineer's input");
+    }
+    items.push({ key:p.key, label:p.label, qty:qty, uom:uom, flags:flags, src:hit });
   });
-  if(!rows.length){ $("compOut").innerHTML="<p class='muted'>No quotable replies yet.</p>"; return; }
-  const minL = Math.min(...rows.map(r=>r.L.total));
-  rows.forEach(r=>{ r.priceScore = minL/r.L.total; r.ps = perfScore(r.v)/5; r.score = 0.7*r.priceScore + 0.3*r.ps; });
-  rows.sort((a,b)=>b.score-a.score);
-  let h = "<table><tr><th>Rank</th><th>Vendor</th><th>Landed price ("+qty+" "+(REQ.unit||"units")+")</th><th>Past performance</th><th>Score</th></tr>";
-  rows.forEach((r,i)=>{
-    const brk = "rate "+money(r.q.rate.val)+"/"+r.q.rate.per+" = "+money(r.L.base) +
-      (r.L.gst? " + GST "+money(r.L.gst) : " (GST "+r.q.gst+", not added again)") +
-      (r.L.freight? " + freight "+money(r.L.freight) : " + freight 0");
-    h += "<tr><td><b>"+(i+1)+"</b></td><td>"+r.v.name+(r.q.flags.length? '<br><span class="flag">incomplete quote</span>':"")+"</td><td>"+money(r.L.total)+"<div class='muted'>"+brk+"</div></td><td>"+(perfScore(r.v)).toFixed(1)+"/5<div class='muted'>"+r.v.note+"</div></td><td>"+(r.score*100).toFixed(1)+"</td></tr>";
+  lines.forEach(function(l, i){
+    if(used[i]) return;
+    if(/[\d,]+(?:\.\d+)?\s*(sqft|sft|sqm|rmt|rm|nos|kg|brass|cum|mt|ltr|bag|bags)\b/i.test(l)){
+      warnings.push("Line not recognized, not added to BOQ: \"" + l.slice(0,90) + "\"");
+    }
+  });
+  var dup = {};
+  items.forEach(function(b){ dup[b.key]=(dup[b.key]||0)+1; });
+  if(!items.length) warnings.push("No recognisable BOQ lines. Supported item families: toilet floor/wall, depression channel, kitchen floor/wall, balcony floor/wall, nozzle grouting.");
+  return { items:items, warnings:warnings };
+}
+
+function runParse(){
+  var t = document.getElementById("reqText").value;
+  var r = parseRequirement(t);
+  S.boq = r.items; S.codes=null; S.quotes=null; S.cmp=null; S.ranked=null;
+  checkApprovalInvalidation();
+  var h = "<table><tr><th>#</th><th>BOQ line</th><th>Qty</th><th>UOM</th><th>Flags</th></tr>";
+  r.items.forEach(function(b,i){
+    h += "<tr><td>"+(i+1)+"</td><td>"+esc(b.label)+"</td><td>"+(b.qty==null?", ":b.qty.toLocaleString("en-IN"))+"</td><td>"+(b.uom||", ")+"</td><td>"+b.flags.map(function(f){return "<span class='flag'>"+esc(f)+"</span>";}).join("")+"</td></tr>";
   });
   h += "</table>";
-  const top=rows[0], second=rows[1];
-  h += '<div class="reason"><b>Why this ranking, in plain words:</b> '+top.v.name+' ranks first at '+money(top.L.total)+' landed'+
-       (second? ', '+money(second.L.total-top.L.total)+' less than '+second.v.name : '')+
-       ', with a past-performance score of '+perfScore(top.v).toFixed(1)+'/5 ('+top.v.note+')'+
-       (top.q.flags.length? '. Caution: their quote is incomplete ('+top.q.flags.join(", ")+').' : '. Their quote has no missing terms.')+'</div>';
-  $("compOut").innerHTML = h;
-  renderReco(rows);
-  $("s6").classList.remove("hidden");
+  r.warnings.forEach(function(w){ h += "<div class='warnbox'>"+esc(w)+"</div>"; });
+  if(r.items.length) h += "<div class='okbox'>"+r.items.length+" BOQ lines structured. Requirement changed → any later approval is reset automatically.</div>";
+  document.getElementById("boqOut").innerHTML = h;
+  document.getElementById("codeOut").innerHTML = ""; document.getElementById("rfqOut").innerHTML = "";
+  document.getElementById("quoteOut").innerHTML = ""; document.getElementById("cmpOut").innerHTML = ""; document.getElementById("recoOut").innerHTML = "";
+  document.getElementById("btn2").disabled = !r.items.length;
+  setLater(3, false);
 }
-function renderReco(rows){
-  const top=rows[0], alt=rows[1];
-  $("recoOut").innerHTML = '<div class="card reco"><b>Recommendation: '+top.v.name+'</b><div class="kv" style="margin-top:6px">'+
-    "<b>Item</b><span>"+(REQ.item?REQ.item.code+" "+REQ.item.name:"-")+"</span>"+
-    "<b>Quantity</b><span>"+(REQ.qty||"-")+" "+(REQ.unit||"")+"</span>"+
-    "<b>Landed price</b><span>"+money(top.L.total)+"</span>"+
-    "<b>Terms</b><span>GST "+top.q.gst+"; freight "+(top.q.freight.type==="included"?"included": top.q.freight.type==="extra"? money(top.q.freight.val):"not quoted")+"; payment "+top.q.payment+"; delivery "+top.q.delivery+"</span>"+
-    "</div>"+
-    '<div class="reason"><b>Reasoning:</b> Lowest landed price among quotable vendors'+(alt? ' ('+money(top.L.total)+' vs '+money(alt.L.total)+')':'')+
-    ' with the strongest delivery record. '+(top.q.payment.includes("credit")? "Their credit terms help cash flow." : "Note: payment is "+top.q.payment+".")+
-    (top.q.flags.length? " Open point before PO: "+top.q.flags.join(", ")+"." : "")+
-    ' The agent recommends; it does not select, order or pay.</div></div>';
+
+function tryCustomReq(){
+  document.getElementById("reqText").value =
+"Tower-2 waterproofing, revised after joint site visit 21 Nov.\n" +
+"Toilet floor waterproofing 13050 sqft. Toilet walls upto 450mm height 11200 sqft.\n" +
+"Waterproofing compound on toilet depression channel 520 rmt.\n" +
+"Kitchen and wash part floor 3350 sqft. Kitchen wall at wet area 2200 sqft.\n" +
+"Balcony and sky terrace floor 6100 sqft. Balcony walls upto 200mm 1750 sqft.\n" +
+"AC ledge coating 18 brass. Nozzle grouting if required 44 nos.";
+  runParse();
 }
-$("autoBtn").onclick = async () => {
-  const wait = ms => new Promise(r=>setTimeout(r,ms));
-  $("sampleBtn").click(); await wait(400);
-  $("analyzeBtn").click(); await wait(900);
-  $("toRfqBtn").click(); await wait(900);
-  $("toQuotesBtn").click(); await wait(400);
-  $("loadRepliesBtn").click(); await wait(400);
-  $("normBtn").click(); await wait(900);
-  $("s6").scrollIntoView({behavior:"smooth"});
-};
-if(location.hash==="#autorun") window.addEventListener("load", ()=>setTimeout(()=>$("autoBtn").click(), 300));
-$("approveBtn").onclick = () => finish(true);
-$("rejectBtn").onclick = () => finish(false);
-function finish(ok){
-  $("hodBtns").classList.add("hidden");
-  const f=$("finalOut"); f.classList.remove("hidden");
-  f.innerHTML = ok
-    ? '<div class="big" style="color:var(--ok)">HOD approved the recommendation</div><p class="muted">Next step in the real chain: work order in Farvision ERP. In this demo, the chain ends here - no order is placed and nothing is sent.</p>'
-    : '<div class="big" style="color:var(--bad)">HOD rejected the recommendation</div><p class="muted">The requirement goes back for re-quote. No action was taken on any vendor.</p>';
-  f.scrollIntoView({behavior:"smooth"});
+
+/* ---------------- Step 2: item code matching ---------------- */
+function runCodes(){
+  if(!S.boq) return;
+  var newCount = 0;
+  var rows = S.boq.map(function(b){
+    var match = null;
+    if(b.key==="toilet_floor") match = ERP_CODES[0];
+    if(b.key==="toilet_wall") match = ERP_CODES[1];
+    if(b.key==="kitchen_floor") match = ERP_CODES[2];
+    if(b.key==="kitchen_wall") match = ERP_CODES[3];
+    if(!match){ newCount++; b.newCode = "WP.NEW-"+newCount; }
+    b.erp = match ? match.code : null;
+    return b;
+  });
+  S.codes = rows;
+  var h = "<table><tr><th>BOQ line</th><th>ERP item code</th><th>Note</th></tr>";
+  rows.forEach(function(b){
+    if(b.erp){
+      h += "<tr><td>"+esc(b.label)+"</td><td><b>"+b.erp+"</b></td><td>Existing code matched.</td></tr>";
+    } else {
+      h += "<tr><td>"+esc(b.label)+"</td><td><b>"+b.newCode+"</b> <span class='flag'>suggested new</span></td><td>No existing code fits, suggest creating "+b.newCode+" in ERP (human creates it; the agent only suggests).</td></tr>";
+    }
+  });
+  h += "</table>";
+  /* duplicate / variant analysis */
+  var wall450 = rows.find(function(b){return b.key==="toilet_wall";});
+  var wall200 = rows.find(function(b){return b.key==="balcony_wall";});
+  var kf = rows.find(function(b){return b.key==="kitchen_floor";});
+  var kw = rows.find(function(b){return b.key==="kitchen_wall";});
+  if(wall450 && wall200){
+    h += "<div class='warnbox'><b>Confirm, not auto-merge:</b> \"toilet wall upto 450 mm\" and \"balcony wall upto 200 mm\" look similar but differ in turn-up height, treated as <b>variants, not duplicates</b>. Please confirm separate codes. (Same logic as 3&nbsp;mm vs 4&nbsp;mm membrane: a spec difference, not a duplicate.)</div>";
+  }
+  if(kf && kw){
+    h += "<div class='warnbox'><b>Confirm, not auto-merge:</b> kitchen floor and kitchen wall share the wet area but are floor vs wall work, kept as separate codes WP.04.A / WP.05.A.</div>";
+  }
+  document.getElementById("codeOut").innerHTML = h;
+  document.getElementById("btn3").disabled = false;
 }
+
+/* ---------------- Step 3: RFQ drafts ---------------- */
+function runRfq(){
+  if(!S.codes) return;
+  var boqLines = S.codes.map(function(b,i){
+    return (i+1)+". "+b.label+", "+(b.qty==null?"qty TBC":b.qty.toLocaleString("en-IN"))+" "+(b.uom||"")+" ["+(b.erp||b.newCode)+"]";
+  }).join("\n");
+  var h = "";
+  VENDORS.forEach(function(v){
+    var body =
+"To: "+v.inbox+"   (TEST inbox, never a real vendor)\n"+
+"Subject: RFQ, Waterproofing works, "+SITE+"\n\n"+
+"Dear Sir/Madam,\nPlease quote your best unit rates for:\n\n"+boqLines+"\n\n"+
+"Please state clearly: unit rate per item, GST treatment, freight, payment terms, and delivery time.\n"+
+"Regards,\nContracts & Planning (draft prepared by procurement agent; a human reviews and sends)";
+    h += "<div class='vendblock'><h3>"+esc(v.name)+" <span class='chip draft'>DRAFT, not sent</span></h3><pre>"+esc(body)+"</pre></div>";
+  });
+  document.getElementById("rfqOut").innerHTML = h;
+  /* prepare quote inputs */
+  var qi = "";
+  VENDORS.forEach(function(v){
+    qi += "<div class='vendblock'><h3>"+esc(v.name)+", reply <span class='muted'>(format: "+fmtName(v.id)+")</span></h3>"+
+      "<textarea id='q_"+v.id+"' style='min-height:120px'>"+esc(SAMPLE_QUOTES[v.id])+"</textarea></div>";
+  });
+  document.getElementById("quoteIn").innerHTML = qi;
+  document.getElementById("btn4").disabled = false;
+}
+function fmtName(id){ return {v1:"rate table", v2:"email prose", v3:"chat text", v4:"scanned PDF text"}[id]; }
+
+/* ---------------- Step 4: quote normalisation ---------------- */
+var RATE_KEYS = [
+  { key:"toilet_floor",  res:[/toilet\s*f1?oor[^.\n]*?(?:rs\.?\s*|at\s*)([\d?]+|\[illegible\])\s*\/?\s*(sqft|sft|sqm)?/i] },
+  { key:"toilet_wall",   res:[/toilet\s*wa1?l[^.\n]*?(?:rs\.?\s*|at\s*)([\d?]+|\[illegible\])\s*\/?\s*(sqft|sft|sqm)?/i, /wall\s+upto\s*450/i] },
+  { key:"depression",    res:[/depression\s*channe1?l?[^.\n]*?(?:rs\.?\s*|at\s*)([\d?]+|\[illegible\])\s*\/?\s*(rmt|rm)?/i] },
+  { key:"kitchen_floor", res:[/kitchen\s*f1?oor[^.\n]*?(?:rs\.?\s*|at\s*)([\d?]+|\[illegible\])?\s*\/?\s*(sqft|sft|sqm)?/i] },
+  { key:"kitchen_wall",  res:[/kitchen\s*wa1?l[^.\n]*?(?:rs\.?\s*|at\s*)([\d?]+|\[illegible\])\s*\/?\s*(sqft|sft|sqm)?/i] },
+  { key:"balcony_floor", res:[/ba1?cony\s*f1?oor[^.\n]*?(?:rs\.?\s*|at\s*)([\d?]+|\[illegible\])\s*\/?\s*(sqft|sft|sqm)?/i] },
+  { key:"balcony_wall",  res:[/ba1?cony\s*wa1?l[^.\n]*?(?:rs\.?\s*|at\s*)([\d?]+|\[illegible\])?\s*\/?\s*(sqft|sft|sqm)?/i] },
+  { key:"grouting",      res:[/grouting[^.\n]*?(?:rs\.?\s*|at\s*)([\d?]+|\[illegible\])\s*\/?\s*(nos|nozzle)?/i, /(\d+)\s*(?:\/-)?\s*per\s*nozzle/i] }
+];
+
+function parseQuote(id, text){
+  var v = VENDORS.find(function(x){return x.id===id;});
+  var rates = {}, flags = [];
+  /* vendor-specific fast paths first (structure mirrors real formats) */
+  var t = text;
+  function setRate(k, val, unit, note){
+    if(val==null) return;
+    if(/illegible|\?/.test(String(val))){ rates[k]={rate:null, flag:"unreadable in scan"}; return; }
+    var n = parseFloat(String(val).replace(/,/g,""));
+    if(isNaN(n)){ rates[k]={rate:null, flag:"could not parse"}; return; }
+    rates[k] = { rate:n, uom:(unit||"").toUpperCase()||null, note:note||null };
+  }
+  if(id==="v1"){
+    var m;
+    var map = [["toilet_floor",/toilet floor\s+Rs\s*([\d.]+)/i],["toilet_wall",/toilet wall 450mm\s+Rs\s*([\d.]+)/i],
+      ["depression",/depression channel\s+Rs\s*([\d.]+)/i],["kitchen_floor",/kitchen floor\s+Rs\s*([\d.]+)/i],
+      ["kitchen_wall",/kitchen wall\s+Rs\s*([\d.]+)/i],["balcony_floor",/balcony floor\s+Rs\s*([\d.]+)/i],
+      ["balcony_wall",/balcony wall 200mm\s+Rs\s*([\d.]+)/i],["grouting",/nozzle grouting\s+Rs\s*([\d.]+)/i]];
+    map.forEach(function(p){ m=t.match(p[1]); if(m) setRate(p[0], m[1]); });
+  } else if(id==="v2"){
+    var cm = t.match(/toilet floor and toilet wall together at Rs\s*([\d.]+)\s*per\s*sqft/i);
+    if(cm){ setRate("toilet_floor",cm[1],"SQFT","combined floor+wall rate"); setRate("toilet_wall",cm[1],"SQFT","combined floor+wall rate"); }
+    var km = t.match(/kitchen floor and kitchen wall at Rs\s*([\d.]+)\s*per\s*sqft/i);
+    if(km){ setRate("kitchen_floor",km[1],"SQFT","combined rate"); setRate("kitchen_wall",km[1],"SQFT","combined rate"); }
+    var bf=t.match(/balcony floor Rs\s*([\d.]+)/i); if(bf) setRate("balcony_floor",bf[1]);
+    var bw=t.match(/balcony wall Rs\s*([\d.]+)/i); if(bw) setRate("balcony_wall",bw[1]);
+    var dp=t.match(/depression channel Rs\s*([\d.]+)\s*per\s*running\s*metre/i); if(dp) setRate("depression",dp[1],"RMT");
+    var gr=t.match(/nozzle grouting Rs\s*([\d.]+)\s*per\s*nozzle/i); if(gr) setRate("grouting",gr[1],"NOS");
+  } else if(id==="v3"){
+    var pairs = [["toilet_floor",/toilet floor\s*([\d.]+)\s*\/-\s*sqft/i],["toilet_wall",/wall\s*([\d.]+)\s*\/-\s*sqft/i],
+      ["depression",/depression\s*([\d.]+)\s*\/-\s*rmt/i],["kitchen_floor",/kitchen floor\s*([\d.]+)\s*\/-/i],
+      ["kitchen_wall",/kitchen wall\s*([\d.]+)\s*\/-/i],["balcony_floor",/balcony floor\s*([\d.]+)\s*\/-/i],
+      ["balcony_wall",/balcony wall\s*([\d.]+)\s*\/-/i],["grouting",/grouting\s*([\d.]+)\s*per\s*nozzle/i]];
+    pairs.forEach(function(p){ var m=t.match(p[1]); if(m) setRate(p[0], m[1]); });
+  } else if(id==="v4"){
+    var s4 = [["toilet_floor",/toilet f1oor[^\n]*?Rs\s*([^\s/]+)/i],["toilet_wall",/toilet wa1?l[^\n]*?Rs\s*([\d.]+)/i],
+      ["depression",/depression channe1[^\n]*?Rs\s*([\d.]+)/i],["kitchen_floor",/kitchen f1oor[^\n]*?Rs\s*([^\s/]+)/i],
+      ["kitchen_wall",/kitchen wa11[^\n]*?Rs\s*([\d.]+)/i],["balcony_floor",/ba1?cony f1oor[^\n]*?Rs\s*([\d.]+)/i],
+      ["balcony_wall",/ba1?cony wa1?l[^\n]*?Rs\s*([^\s/]+)/i],["grouting",/nozz1?e grouting[^\n]*?Rs\s*([^\s/]+)/i]];
+    s4.forEach(function(p){ var m=t.match(p[1]); if(m) setRate(p[0], m[1]); });
+  }
+  /* terms */
+  var terms = { gst:null, freight:null, payment:null, delivery:null };
+  var g = t.match(/gst[:\s]*(?:18%?\s*extra|extra|as applicable|as app1icab1e)/i);
+  if(/18\s*%/.test(t)) terms.gst = "18% extra";
+  else if(g) terms.gst = "extra as applicable (rate % not stated)";
+  var f = t.match(/freight[:\s]*([^\n.]+)/i);
+  if(f) terms.freight = f[1].trim();
+  var p = t.match(/payment[:\s]*([^\n.]+)/i);
+  if(p) terms.payment = p[1].trim();
+  var d = t.match(/delivery[:\s]*([^\n.]+)/i) || t.match(/delivery\s*(\d+)\s*din/i);
+  if(d) terms.delivery = d[1].trim();
+  /* flags for gaps */
+  S.boq && S.boq.forEach(function(b){
+    if(!rates[b.key]) flags.push("no rate found for \""+b.label+"\"");
+    else if(rates[b.key].rate==null) flags.push("\""+b.label+"\" rate unreadable, flagged, not guessed");
+  });
+  ["gst","freight","payment","delivery"].forEach(function(k){
+    if(!terms[k]) flags.push(k.toUpperCase()+" not stated");
+  });
+  return { vendor:v, rates:rates, terms:terms, flags:flags };
+}
+
+function runQuotes(){
+  S.quotes = VENDORS.map(function(v){
+    return parseQuote(v.id, document.getElementById("q_"+v.id).value);
+  });
+  checkApprovalInvalidation();
+  var h = "";
+  S.quotes.forEach(function(q){
+    h += "<div class='vendblock'><h3>"+esc(q.vendor.name)+" <span class='chip rule'>normalised</span></h3>";
+    h += "<table><tr><th>BOQ line</th><th>Rate</th><th>Note</th></tr>";
+    S.boq.forEach(function(b){
+      var r = q.rates[b.key];
+      var cell = !r ? "<span class='flag'>not quoted</span>" : (r.rate==null ? "<span class='flag'>unreadable</span>" : "Rs "+r.rate+" / "+(r.uom||b.uom||""));
+      var note = r && r.note ? esc(r.note) : "";
+      h += "<tr><td>"+esc(b.label)+"</td><td>"+cell+"</td><td>"+note+"</td></tr>";
+    });
+    h += "</table><p class='muted'>GST: "+esc(q.terms.gst||"not stated")+" · Freight: "+esc(q.terms.freight||"not stated")+" · Payment: "+esc(q.terms.payment||"not stated")+" · Delivery: "+esc(q.terms.delivery||"not stated")+"</p>";
+    if(q.flags.length) h += "<div>"+q.flags.map(function(f){return "<span class='flag'>"+esc(f)+"</span>";}).join("")+"</div>";
+    h += "</div>";
+  });
+  document.getElementById("quoteOut").innerHTML = h;
+  document.getElementById("btn5").disabled = false;
+}
+
+function mutateQuotes(){
+  var el = document.getElementById("q_v3");
+  if(el){ el.value = el.value.replace("toilet floor 32/-", "toilet floor 30/-").replace("grouting 150", "grouting 165"); }
+  runQuotes();
+}
+
+/* ---------------- Step 5: comparative ---------------- */
+function runCompare(){
+  var items = S.boq;
+  /* item-wise lowest */
+  var lowest = {};
+  items.forEach(function(b){
+    var best = null;
+    S.quotes.forEach(function(q){
+      var r = q.rates[b.key];
+      if(r && r.rate!=null && (best==null || r.rate<best)) best = r.rate;
+    });
+    lowest[b.key] = best;
+  });
+  /* landed cost per vendor */
+  var landed = S.quotes.map(function(q){
+    var base = 0, missing = 0, unreadable = 0;
+    items.forEach(function(b){
+      var r = q.rates[b.key];
+      if(!r) missing++;
+      else if(r.rate==null) unreadable++;
+      else base += r.rate * (b.qty||0);
+    });
+    var gst = q.terms.gst && /18%/.test(q.terms.gst) ? base*0.18 : null;
+    var freight = null;
+    if(q.terms.freight && /included/i.test(q.terms.freight)) freight = 0;
+    else if(q.terms.freight && /2%/.test(q.terms.freight)) freight = base*0.02;
+    return { q:q, base:base, gst:gst, freight:freight, missing:missing, unreadable:unreadable,
+             total:(gst==null||freight==null)? null : base+gst+freight };
+  });
+  S.cmp = { lowest:lowest, landed:landed };
+
+  var h = "<h3 style='margin:8px 0 4px;font-size:13.5px'>Item-wise rates (green = lowest quoted)</h3><table><tr><th>BOQ line</th>";
+  S.quotes.forEach(function(q){ h += "<th>"+esc(q.vendor.name)+"</th>"; });
+  h += "</tr>";
+  items.forEach(function(b){
+    h += "<tr><td>"+esc(b.label)+" <span class='muted'>("+(b.uom||"")+")</span></td>";
+    S.quotes.forEach(function(q){
+      var r = q.rates[b.key];
+      var cls = (r && r.rate!=null && r.rate===lowest[b.key]) ? " class='lowest'" : "";
+      var cell = !r ? ", " : (r.rate==null ? "<span class='flag'>unreadable</span>" : "Rs "+r.rate);
+      h += "<td"+cls+">"+cell+"</td>";
+    });
+    h += "</tr>";
+  });
+  h += "</table>";
+
+  h += "<h3 style='margin:14px 0 4px;font-size:13.5px'>Landed cost at BOQ quantities</h3><table><tr><th>Vendor</th><th>Base (rate × qty)</th><th>GST</th><th>Freight</th><th>Comparable total</th><th>Gaps</th></tr>";
+  landed.forEach(function(L){
+    h += "<tr><td>"+esc(L.q.vendor.name)+"</td><td>"+money(L.base)+"</td><td>"+(L.gst==null?"<span class='flag'>GST unstated</span>":money(L.gst))+"</td><td>"+(L.freight==null?"<span class='flag'>freight unstated</span>":(L.freight===0?"included":money(L.freight)))+"</td><td>"+(L.total==null?"<span class='flag'>not fully comparable</span>":money(L.total))+"</td><td>"+(L.missing+L.unreadable? "<span class='flag'>"+(L.missing+L.unreadable)+" item(s) missing/unreadable</span>":", ")+"</td></tr>";
+  });
+  h += "</table><p class='muted'>Totals use only stated terms. A vendor with unstated GST/freight is marked not fully comparable instead of being given an invented number.</p>";
+  document.getElementById("cmpOut").innerHTML = h;
+  document.getElementById("btn6").disabled = false;
+}
+
+/* ---------------- Step 6: ranking + recommendation ---------------- */
+function rank(){
+  var perfW = 0.25;
+  var rows = S.cmp.landed.map(function(L){
+    var simAvg = (L.q.vendor.sim.quality + L.q.vendor.sim.delivery)/2;
+    var priceScore = null;
+    var totals = S.cmp.landed.filter(function(x){return x.total!=null;}).map(function(x){return x.total;});
+    if(L.total!=null && totals.length){ priceScore = Math.min.apply(null,totals)/L.total*5; }
+    var score = priceScore==null ? null : (1-perfW)*priceScore + perfW*simAvg;
+    return { L:L, score:score, priceScore:priceScore, simAvg:simAvg };
+  });
+  rows.sort(function(a,b){ return (b.score==null?-1:b.score) - (a.score==null?-1:a.score); });
+  S.ranked = rows;
+  return rows;
+}
+
+function reasonsFor(r, rankIdx){
+  var L = r.L, out = [];
+  if(L.total!=null){
+    var totals = S.cmp.landed.filter(function(x){return x.total!=null;}).map(function(x){return x.total;});
+    var min = Math.min.apply(null,totals);
+    if(L.total===min) out.push("lowest fully-comparable landed cost at "+money(L.total));
+    else out.push("landed cost "+money(L.total)+" ("+(((L.total/min)-1)*100).toFixed(1)+"% above lowest fully-comparable)");
+  } else {
+    out.push("not fully comparable: GST/freight unstated, so its total cannot be computed fairly");
+  }
+  if(L.missing+L.unreadable) out.push((L.missing+L.unreadable)+" BOQ line(s) missing or unreadable in its quote");
+  out.push("SIMULATED past-performance avg "+r.simAvg.toFixed(1)+"/5 (quality "+L.q.vendor.sim.quality+", delivery "+L.q.vendor.sim.delivery+", disputes: "+L.q.vendor.sim.disputes+"), demo scores, no real records");
+  if(L.q.terms.payment) out.push("payment terms: "+L.q.terms.payment);
+  return out;
+}
+
+function runReco(){
+  var rows = rank();
+  var h = "<table><tr><th>Rank</th><th>Vendor</th><th>Score</th><th>Why (plain words)</th></tr>";
+  rows.forEach(function(r,i){
+    var reasons = reasonsFor(r,i).map(function(x){return "<div class='reason'>"+esc(x)+"</div>";}).join("");
+    h += "<tr><td>"+(i+1)+"</td><td>"+esc(r.L.q.vendor.name)+"</td><td>"+(r.score==null?"n/a":r.score.toFixed(2))+"</td><td>"+reasons+"</td></tr>";
+  });
+  h += "</table>";
+  h += "<p class='muted'>Scores: 75% price (fully-comparable landed cost) + 25% SIMULATED past performance. Vendors with unstated terms are shown but not force-ranked.</p>";
+  document.getElementById("recoOut").innerHTML = h;
+  document.getElementById("btnApprove").disabled = false;
+  draftHod(rows);
+}
+
+function setBadge(ai){
+  document.getElementById("aiBadge").innerHTML = ai
+    ? "<span class='chip ai'>AI draft, Sarvam 105B via hardened proxy</span>"
+    : "<span class='chip rule'>rule-based draft (AI unavailable)</span>";
+}
+
+function draftHod(rows){
+  var top = rows[0];
+  var facts = "Site: "+SITE+". Ranking: "+rows.map(function(r,i){
+    return (i+1)+". "+r.L.q.vendor.name+" (score "+(r.score==null?"n/a":r.score.toFixed(2))+", "+reasonsFor(r,i)[0]+")";
+  }).join(" ");
+  var fallback = "Draft for HOD approval, recommendation: "+top.L.q.vendor.name+". Reasons: "+reasonsFor(top,0).join("; ")+". This is a recommendation only; the final call is yours.";
+  var out = document.getElementById("approvalOut");
+  setBadge(false);
+  out.innerHTML = "<h3 style='margin:10px 0 4px;font-size:13.5px'>HOD message (drafting…)</h3>";
+  var body = {
+    system: "You are drafting a short internal recommendation note from a procurement agent to a Head of Department. Plain words, 4-6 sentences. Recommend the top-ranked vendor, give the price and performance reasons, mention any comparison gaps, and state clearly that the agent only recommends and the human decides. Never invent numbers beyond the facts given.",
+    user: "Facts: "+facts+" Write the note."
+  };
+  var ctrl = new AbortController();
+  var to = setTimeout(function(){ ctrl.abort(); }, 20000);
+  fetch("https://vch3-procure-proxy.santosh-k.workers.dev/chat", {
+    method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(body), signal: ctrl.signal
+  }).then(function(r){
+    clearTimeout(to);
+    if(!r.ok) throw new Error("proxy "+r.status);
+    return r.json();
+  }).then(function(j){
+    if(!j.content) throw new Error("empty");
+    setBadge(true);
+    out.innerHTML = "<h3 style='margin:10px 0 4px;font-size:13.5px'>HOD message</h3><pre>"+esc(j.content)+"</pre>";
+  }).catch(function(){
+    clearTimeout(to);
+    setBadge(false);
+    out.innerHTML = "<h3 style='margin:10px 0 4px;font-size:13.5px'>HOD message</h3><pre>"+esc(fallback)+"</pre>";
+  });
+  renderApproval();
+}
+
+/* ---------------- Approval + invalidation ---------------- */
+function approveHod(){
+  if(!S.ranked) return;
+  S.approval = { hash:reqHash(), at:new Date().toLocaleTimeString("en-IN") };
+  renderApproval();
+}
+function renderApproval(){
+  var el = document.getElementById("approvalState");
+  if(!el){
+    var d = document.createElement("div"); d.id = "approvalState";
+    document.getElementById("s6").appendChild(d); el = d;
+  }
+  if(S.approval && S.approval.hash===reqHash()){
+    el.innerHTML = "<div class='okbox'><b>Approved by HOD (demo)</b> at "+S.approval.at+". The agent recommended; the human decided. No order or payment is placed by this app.</div>";
+  } else if(S.approval){
+    el.innerHTML = "";
+  }
+}
+function checkApprovalInvalidation(){
+  if(S.approval && S.approval.hash!==reqHash()){
+    S.approval = null;
+    var el = document.getElementById("approvalState");
+    if(el) el.innerHTML = "<div class='warnbox'><b>Approval reset:</b> the requirement or quotes changed after HOD approval, so the earlier approval was invalidated. Re-rank and re-approve.</div>";
+  }
+}
+function setLater(n, on){ for(var i=n;i<=6;i++){ var b=document.getElementById("btn"+i); if(b) b.disabled = !on; } }
+
+/* auto-run step 1 on load for the demo */
+window.addEventListener("load", function(){ runParse(); });
 </script>
 </body>
 </html>
