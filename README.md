@@ -34,7 +34,7 @@ A procurement assistant for a construction site workflow:
 
 - Single static page (HTML/JS), hosted on GitHub Pages. No login required.
 - Rule-based parsing and ranking engine in the page.
-- AI drafting layer (Sarvam 105B via a hardened Cloudflare Worker proxy with per-call caps and a persistent budget counter) is being integrated with an honest UI badge; the rule-based engine remains the fallback. The README will be updated when that layer is verified live end-to-end.
+- AI drafting layer (Sarvam 105B via a hardened Cloudflare Worker proxy with per-call caps and a persistent budget counter) is verified live end-to-end: on success the UI badge reads "AI draft, Sarvam 105B via hardened proxy"; when unreachable it falls back to the rule-based draft and the badge says so honestly. Demo video (unlisted): https://youtu.be/GEQwVAiFBfg
 
 ## Repo layout
 
