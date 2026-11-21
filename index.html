@@ -552,27 +552,44 @@ function draftHod(rows){
   var out = document.getElementById("approvalOut");
   setBadge(false);
   out.innerHTML = "<h3 style='margin:10px 0 4px;font-size:13.5px'>HOD message (drafting…)</h3>";
+  /* short AI-safe facts: simple phrasing, no nested parentheses, no score parentheticals beyond plain numbers */
+  function aiLine(r, i){
+    var L = r.L;
+    if(r.score==null) return (i+1)+". "+L.q.vendor.name+" (not fully comparable).";
+    var totals = S.cmp.landed.filter(function(x){return x.total!=null;}).map(function(x){return x.total;});
+    var min = Math.min.apply(null, totals);
+    var why = L.total===min ? "lowest fully-comparable landed cost at "+money(L.total)
+                            : (((L.total/min)-1)*100).toFixed(1)+"% above the lowest fully-comparable cost";
+    return (i+1)+". "+L.q.vendor.name+", score "+r.score.toFixed(2)+", "+why+".";
+  }
+  var aiFacts = "Site: "+SITE+". Ranking: "+rows.map(aiLine).join(" ");
   var body = {
     system: "You are a helpful assistant.",
-    user: "Draft a short internal note to the Head of Department, in plain words. Facts: "+facts+" Write 4-6 sentences recommending the top vendor with price reasons, and mention the comparison gaps."
+    user: "Draft a short internal note to the Head of Department, in plain words. Facts: "+aiFacts+" Write 4-6 sentences recommending the top vendor with price reasons, and mention the comparison gaps."
   };
-  var ctrl = new AbortController();
-  var to = setTimeout(function(){ ctrl.abort(); }, 20000);
-  fetch("https://vch3-procure-proxy.santosh-k.workers.dev/chat", {
-    method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(body), signal: ctrl.signal
-  }).then(function(r){
-    clearTimeout(to);
-    if(!r.ok) throw new Error("proxy "+r.status);
-    return r.json();
-  }).then(function(j){
-    if(!j.content) throw new Error("empty");
-    setBadge(true);
-    out.innerHTML = "<h3 style='margin:10px 0 4px;font-size:13.5px'>HOD message</h3><pre>"+esc(j.content)+"</pre>";
-  }).catch(function(){
-    clearTimeout(to);
+  function showFallback(){
     setBadge(false);
     out.innerHTML = "<h3 style='margin:10px 0 4px;font-size:13.5px'>HOD message</h3><pre>"+esc(fallback)+"</pre>";
-  });
+  }
+  function attempt(n){
+    var ctrl = new AbortController();
+    var to = setTimeout(function(){ ctrl.abort(); }, 20000);
+    fetch("https://vch3-procure-proxy.santosh-k.workers.dev/chat", {
+      method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(body), signal: ctrl.signal
+    }).then(function(r){
+      clearTimeout(to);
+      if(!r.ok) throw new Error("proxy "+r.status);
+      return r.json();
+    }).then(function(j){
+      if(!j.content) throw new Error("empty");
+      setBadge(true);
+      out.innerHTML = "<h3 style='margin:10px 0 4px;font-size:13.5px'>HOD message</h3><pre>"+esc(j.content)+"</pre>";
+    }).catch(function(){
+      clearTimeout(to);
+      if(n>1) attempt(n-1); else showFallback();
+    });
+  }
+  attempt(3);
   renderApproval();
 }
 
